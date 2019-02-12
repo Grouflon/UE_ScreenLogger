@@ -1,3 +1,4 @@
+
 #include "OnScreenOutputDevice.h"
 
 #include <Engine/Engine.h>
@@ -8,17 +9,27 @@ void FOnScreenOutputDevice::Serialize(const TCHAR* V, ELogVerbosity::Type Verbos
 {
 	if (GEngine)
 	{
-		if (Verbosity == ELogVerbosity::Error && GetMutableDefault<UScreenLoggerSettings>()->bPrintErrors)
+		bool bPrintErrors   = GetMutableDefault<UScreenLoggerSettings>()->bPrintErrors;
+		bool bPrintWarnings = GetMutableDefault<UScreenLoggerSettings>()->bPrintWarnings;
+		bool bPrintLogs     = GetMutableDefault<UScreenLoggerSettings>()->bPrintLogs;
+
+		float warningPrintTime = GetMutableDefault<UScreenLoggerSettings>()->printWarningDuration;
+		float errorPrintTime   = GetMutableDefault<UScreenLoggerSettings>()->printErrorsDuration;
+
+		FColor warningPrintColor = GetMutableDefault<UScreenLoggerSettings>()->printWarningColor;
+		FColor errorPrintColor   = GetMutableDefault<UScreenLoggerSettings>()->printErrorColor;
+
+		if (Verbosity == ELogVerbosity::Error && bPrintErrors)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, GetMutableDefault<UScreenLoggerSettings>()->printDuration, FColor::Red, V);
+			GEngine->AddOnScreenDebugMessage(-1, errorPrintTime, errorPrintColor, V);
 		}
-		else if (Verbosity == ELogVerbosity::Warning && GetMutableDefault<UScreenLoggerSettings>()->bPrintWarnings)
+		else if (Verbosity == ELogVerbosity::Warning && bPrintWarnings)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, GetMutableDefault<UScreenLoggerSettings>()->printDuration, FColor::Yellow, V);
+			GEngine->AddOnScreenDebugMessage(-1, warningPrintTime, warningPrintColor, V);
 		}
-		else if ((Verbosity == ELogVerbosity::Display || Verbosity == ELogVerbosity::Log) && GetMutableDefault<UScreenLoggerSettings>()->bPrintLogs)
+		else if ((Verbosity == ELogVerbosity::Display || Verbosity == ELogVerbosity::Log) && )
 		{
-			GEngine->AddOnScreenDebugMessage(-1, GetMutableDefault<UScreenLoggerSettings>()->printDuration, FColor::White, V);
+			GEngine->AddOnScreenDebugMessage(-1, warningPrintTime, FColor::White, V);
 		}
 	}
 }
