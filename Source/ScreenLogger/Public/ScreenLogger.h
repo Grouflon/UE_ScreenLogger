@@ -3,6 +3,7 @@
 #pragma once
 
 class FOnScreenOutputDevice;
+class FToConsoleOutputDevice;
 
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
@@ -16,5 +17,6 @@ public:
 	virtual void ShutdownModule() override;
 
 private:
-	FOnScreenOutputDevice* m_outputDevice = nullptr;
+	FOnScreenOutputDevice* m_onScreenOutputDevice = nullptr;
+	FToConsoleOutputDevice* m_toConsoleOutputDevice = nullptr;
 };

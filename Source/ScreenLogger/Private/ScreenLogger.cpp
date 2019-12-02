@@ -6,6 +6,7 @@
 #include <ISettingsSection.h>
 #include <ScreenLoggerSettings.h>
 #include <OnScreenOutputDevice.h>
+#include <ToConsoleOutputDevice.h>
 
 #define LOCTEXT_NAMESPACE "FScreenLoggerModule"
 
@@ -21,15 +22,22 @@ void FScreenLoggerModule::StartupModule()
 		);
 	}
 
-	m_outputDevice = new FOnScreenOutputDevice;
-	GLog->AddOutputDevice(m_outputDevice);
+	m_onScreenOutputDevice = new FOnScreenOutputDevice;
+	GLog->AddOutputDevice(m_onScreenOutputDevice);
+
+	m_toConsoleOutputDevice = new FToConsoleOutputDevice;
+	GLog->AddOutputDevice(m_toConsoleOutputDevice);
 }
 
 void FScreenLoggerModule::ShutdownModule()
 {
-	GLog->RemoveOutputDevice(m_outputDevice);
-	delete m_outputDevice;
-	m_outputDevice = nullptr;
+	GLog->RemoveOutputDevice(m_toConsoleOutputDevice);
+	delete m_toConsoleOutputDevice;
+	m_toConsoleOutputDevice = nullptr;
+
+	GLog->RemoveOutputDevice(m_onScreenOutputDevice);
+	delete m_onScreenOutputDevice;
+	m_onScreenOutputDevice = nullptr;
 
 	ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>("Settings");
 	if (SettingsModule != nullptr)

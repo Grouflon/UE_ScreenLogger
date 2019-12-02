@@ -2,9 +2,27 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
+#include <CoreMinimal.h>
+#include <UObject/NoExportTypes.h>
+#include <LogVerbosity.h>
 #include "ScreenLoggerSettings.generated.h"
+
+
+UENUM()
+enum EScreenLoggerVerbosity
+{
+	ScreenLoggerVerbosity_NoLogging = 0		UMETA(DisplayName = "NoLogging"),
+	ScreenLoggerVerbosity_Fatal				UMETA(DisplayName = "Fatal"),
+	ScreenLoggerVerbosity_Error				UMETA(DisplayName = "Error"),
+	ScreenLoggerVerbosity_Warning			UMETA(DisplayName = "Warning"),
+	ScreenLoggerVerbosity_Display			UMETA(DisplayName = "Display"),
+	ScreenLoggerVerbosity_Log				UMETA(DisplayName = "Log"),
+	ScreenLoggerVerbosity_Verbose			UMETA(DisplayName = "Verbose"),
+	ScreenLoggerVerbosity_VeryVerbose		UMETA(DisplayName = "VeryVerbose"),
+};
+
+ELogVerbosity::Type ScreenLoggerVerbosityToLogVerbosity(EScreenLoggerVerbosity _verbosity);
+
 
 /**
  * 
@@ -15,13 +33,8 @@ class SCREENLOGGER_API UScreenLoggerSettings : public UObject
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(Config, EditAnywhere, DisplayName = "Print Errors on screen") bool bPrintErrors = true;
-	UPROPERTY(Config, EditAnywhere, DisplayName = "Print Warnings on screen") bool bPrintWarnings = true;
-	UPROPERTY(Config, EditAnywhere, DisplayName = "Print Logs on screen") bool bPrintLogs = false;
-	
-	UPROPERTY(Config, EditAnywhere, DisplayName = "Print warnings duration") float printWarningDuration = 1.5f;
-	UPROPERTY(Config, EditAnywhere, DisplayName = "Print errors duration") float printErrorsDuration = 1.5f;
-	
-	UPROPERTY(Config, EditAnywhere, DisplayName = "Print warning color") FColor printWarningColor = FColor::Yellow;
-	UPROPERTY(Config, EditAnywhere, DisplayName = "Print errors color") FColor printErrorColor = FColor::Red;
+	UPROPERTY(Config, Category = "Screen", EditAnywhere, DisplayName = "Print to screen verbosity") TEnumAsByte<EScreenLoggerVerbosity> PrintToScreenVerbosity = ScreenLoggerVerbosity_Warning;
+	UPROPERTY(Config, Category = "Screen", EditAnywhere, DisplayName = "Print to screen duration") float PrintToScreenDuration = 1.5f;
+
+	UPROPERTY(Config, Category = "Console", EditAnywhere, DisplayName = "Print log to console verbosity") TEnumAsByte<EScreenLoggerVerbosity> PrintToConsoleVerbosity = ScreenLoggerVerbosity_Log;
 };
