@@ -6,12 +6,11 @@
 
 void FOnScreenOutputDevice::Serialize(const TCHAR* V, ELogVerbosity::Type Verbosity, const FName& Category)
 {
-	UScreenLoggerSettings* settings = GetMutableDefault<UScreenLoggerSettings>();
-	if (!settings)
-		return;
-
 	if (GEngine)
 	{
+		UScreenLoggerSettings* settings = (UScreenLoggerSettings*)(UScreenLoggerSettings::StaticClass()->ClassDefaultObject);
+		if (!settings)
+			return;
 
 		if (Verbosity <= ScreenLoggerVerbosityToLogVerbosity(settings->PrintToScreenVerbosity))
 		{
